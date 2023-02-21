@@ -3,7 +3,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;  
-
+import java.sql.Timestamp;  
 
 
 /**
@@ -15,30 +15,6 @@ import java.util.*;
  *	left per payer. 
  */
 public class spendPoints {
-
-	static class payer{
-        protected String name;
-        protected int points;
-        protected String date;
-  
-        public payer(String name, int points, String date) {
-            this.name = name;
-            this.points = points;
-            this.date = date;
-        }
-
-		public String getName(){
-			return this.name;
-		}
-
-		public int getPoints(){
-			return this.points;
-		}
-
-		public String getDate(){
-			return this.date;
-		}
-  }
 	public static void main(String[] args) throws FileNotFoundException {
 		//check if CLAs are valid.
 		if(args.length < 2){
@@ -48,38 +24,106 @@ public class spendPoints {
 			System.out.println("Too many command line arguments.");
 			return;
 		} 
-		
+		try {
+			if (Integer.parseInt(args[0]) < 0){
+				throw new NumberFormatException();
+			}
+		} catch (NumberFormatException e){
+			System.out.println("Invalid number of points, please enter valid non-negative number.");
+			return;
+		}		
 		//attempt to open file.
 		try {
-		BufferedReader br = new BufferedReader(new FileReader(args[1]));		
-	
-		//Initialize necessary variables	
+		BufferedReader count = new BufferedReader(new FileReader(args[1]));			
 		String line;
-		String payer;
-		int points;
+		//get line count for array size
+		int lines = 0;	
+		while((line = count.readLine()) != null){
+			lines++;
+		}
+		
+		count.close();
+	
+		BufferedReader br = new BufferedReader(new FileReader(args[1]));
+		//Initialize necessary variables	
 		String time; 
-		int lineCount;
-		lineCount = 0;
-		List<payer> data = new ArrayList<payer>();		
-
+		String[][] data = new String[lines-1][3];	
+		
 		//read from the csv file 
-		while ((line = br.readLine()) != null) {
-			String[] split = line.split(",");
-			payer = split[0].replace("\"", "");
-
-			if (payer.equals("payer")){
-				continue;
+		for(int i = 0; i < lines;){	
+			line = br.readLine();
+			if (line == null){
+				break;
 			}
-			
-			points = Integer.parseInt(split[1]);
-			time = split[2].replace("\"", "");
+			String[] split = line.split(",");
 
-			data.add(new payer(payer, points, time));
-			
-			Collections.sort(data.getDate());
+			time = split[2].replace("\"", "");
+			time = time.replace("T", " ");
+			time = time.replace("Z", "");
+
+			data[i][0] = split[0].replace("\"", "");
+			if (data[i][0].equals("payer")){
+                  continue;
+            }
+			data[i][1] = split[1];
+			data[i][2] = time;
+			i++;
+		}
+	
+		//Sort data array by timestamp
+		Arrays.sort(data, (a, b) -> Timestamp.valueOf(a[2]).compareTo(Timestamp.valueOf(b[2])));
+
+
+		//Remove points in timestamp order
+
+		int points = Integer.parseInt(args[0]);
+		int payerPoints;
+		for(int i = 0; i < data.length; i++){
+			payerPoints = Integer.parseInt(data[i][1]);
+			if(payerPoints < 0){
+				points -= payerPoints;
+				data[i][1] = "0";
+			} else if(payerPoints > 0) {
+				if(points > payerPoints){
+					points -= payerPoints;
+					data[i][1] = "0";
+				} else {
+					payerPoints -= points;
+					points = 0;
+					data[i][1] = String.valueOf(payerPoints);
+					break;
+				}
+			}	
 		}
 
+	
+		//organize output data
+		List<String[]> output = new ArrayList<String[]>();
+		List<String> names = new ArrayList<String>();
+
+		for(int i = 0; i < data.length; i++){
+			if(names.contains(data[i][0])){
+				for(int j = 0; j < output.size(); j++){
+					if(output.get(j)[0].equals(data[i][0])){
+						output.get(j)[1] = String.valueOf(Integer.parseInt(output.get(j)[1])+ Integer.parseInt(data[i][1]));
+					}
+				}
+			} else {
+				names.add(data[i][0]);
+				output.add(data[i]);
+			}
+		}
 		
+
+		//print output data
+		for(int i = 0; i < output.size(); i ++){
+			System.out.print("\"" + output.get(i)[0] + "\": " + output.get(i)[1]);
+			if(i != output.size() - 1){
+				System.out.println(",");
+			} else {
+				System.out.println();
+			}
+		}	
 		} catch(FileNotFoundException e){
 			System.out.println("File not found.");
 			return;
