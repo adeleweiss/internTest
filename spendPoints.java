@@ -95,7 +95,9 @@ public class spendPoints {
 				}
 			}	
 		}
-
+		if(points != 0){
+			System.out.println("Not enough points available to pay, " + points + " points left to pay.");
+		}
 	
 		//organize output data
 		List<String[]> output = new ArrayList<String[]>();
@@ -123,7 +125,11 @@ public class spendPoints {
 			} else {
 				System.out.println();
 			}
-		}	
+		}
+
+		} catch(IllegalArgumentException e){
+			System.out.println("Invalid arguments in file.");
+			return;
 		} catch(FileNotFoundException e){
 			System.out.println("File not found.");
 			return;

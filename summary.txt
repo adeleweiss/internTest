@@ -1,0 +1,14 @@
+Adele Weiss
+1. Why did you choose the tools, libraries, and language you used for the coding exercise?
+
+I chose to use java as my programming language for the coding exercise because I am most experienced and comfortable with java. I knew I could write this program with everything I know about Java. I chose to use BufferedReader opposed to Scanner because it is mildly faster. I imported multiple exceptions to make sure that there are no unexpected exceptions, such as invalid CLAs, or NumberFormatExceptions, or FileNotFound exceptions. This is important not only to debug my program, but to make it easier to understand why something may not be working, or if there are invalid inputs. I used a 2D array to hold the data because I knew how much space I needed for it, but then used arraylists for output data because it was unknown how many elements I had. I used a lot of for loops to iterate through data. To sort my array I imported Timestamp, as it already implements the ability to compare timestamps, this made it easier to pay for points in chronological order.
+
+2. What are the advantages and disadvantages of your solution?
+
+	Although Java is the language of choice for my solution, it is not the fastest. My time complexity could be improved using a different strategy or language. The advantages are Java's strong memory management which is implicit and less likely to have a memory leak.
+
+3. What has been a favorite school/personal project thus far? What about it that challenged you?
+
+	Before this semester my favorite projects were all from my cs400 class, programming in java and implementing different algorithms such as hashtables, dijkstra’s, red black trees and more. These were all group projects, and my favorite was the backend developer creating a backend hashtable. I used data organized from one of my group mates and organized it into a hashtable object for my other group mates to use and search through. This project was difficult because it was my first group project experience and my first time using bash and linux. I got the hang of it quickly and enjoy using bash now. Currently I am in a hardware class and I am learning the c language. It's very interesting to me how differently some languages work to each other. It was hard to get the hang of at first but because of previous experiences in different languages it was easy to pick up the basics. My most recent project in c involved coding a magic square, and was focused on memory allocation. It was much different than what I’ve done before but it was exciting doing something new. 
+
+
