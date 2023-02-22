@@ -7,6 +7,7 @@ import java.sql.Timestamp;
 
 
 /**
+ *	@Author: Adele Weiss
  *	Class with main method to read from a CSV file, inputing data into a 
  *	2D array. Each array in the 2D array holds the "payer", points, and time.
  *	There should be two CLAs, the file name and the amount of points to spend.
@@ -15,6 +16,11 @@ import java.sql.Timestamp;
  *	left per payer. 
  */
 public class spendPoints {
+
+	/**
+	 * 
+	 * @throws FileNotFoundException if the file is not able to be opened.
+	 */
 	public static void main(String[] args) throws FileNotFoundException {
 		//check if CLAs are valid.
 		if(args.length < 2){
@@ -80,14 +86,14 @@ public class spendPoints {
 		int payerPoints;
 		for(int i = 0; i < data.length; i++){
 			payerPoints = Integer.parseInt(data[i][1]);
-			if(payerPoints < 0){
+			if(payerPoints < 0){ //payers points are negative
 				points -= payerPoints;
 				data[i][1] = "0";
-			} else if(payerPoints > 0) {
-				if(points > payerPoints){
+			} else if(payerPoints > 0) { //payers points are non negative
+				if(points > payerPoints){ // more points left than payer points
 					points -= payerPoints;
 					data[i][1] = "0";
-				} else {
+				} else { // less points left than payer points
 					payerPoints -= points;
 					points = 0;
 					data[i][1] = String.valueOf(payerPoints);
@@ -126,7 +132,8 @@ public class spendPoints {
 				System.out.println();
 			}
 		}
-
+		
+		//catch any exceptions thrown and return
 		} catch(IllegalArgumentException e){
 			System.out.println("Invalid arguments in file.");
 			return;
